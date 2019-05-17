@@ -1,0 +1,369 @@
+#
+#! Thanks for downloading SkFeelings
+#! Made by iMPDevMC 
+#
+
+options:
+
+	#! Do not modify options
+
+	utf1: ❤
+	utf2: ▏ 
+	utf3: »
+
+	lines: &8&m--------------------
+	skprefix: &6&lSk&e&lFeelings
+
+	#! Modify if you want options
+
+	prefix: &6&lSk&e&lFeelings &8&l▏
+
+	#! Free to modify options
+
+	permission: vapemc.feelings.use
+	vip permission: vapemc.feelings.vip 
+	staff permission: vapemc.feelings.staff
+	perm: &cYou are not allowed to use this command !
+
+	broadcast: &f&lVapeMC &8&l▏
+
+	preline: &8&m------&r &f&lVapeMC &8&m------
+
+#
+#! Messages
+#
+
+	hug1: &e%player% &7gave &e%arg 1% &7a warm hug &4&l❤
+	hug2: &c&lCONSOLE &7gave &e%arg 1% &7a warm hug &4&l❤
+
+	kiss1: &e%player% &7gave &e%arg 1% &7a kiss &4&l❤
+	kiss2: &c&lCONSOLE &7gave &e%arg 1% &7a kiss &4&l❤
+
+	boi1: &e%player% &cBOIED &7on %arg 1% !
+	boi2: &c&lCONSOLE &cBOIED &7on &e%arg 1% !
+
+	dab1: &e%player% &7Freshly &cDABED &7on %arg 1%
+	dab2: &c&lCONSOLE &7Freshly &cDABED &7on &e%arg 1%
+
+	slap1: &e%player% &cSLAPED &e%arg 1% &7in the face !
+	slap2: &c&lCONSOLE &cSLAPED &e%arg 1% &7in the face !
+
+	bite1: &e%player% &7has &cBITTEN &e%arg 1% ! &c&lThat hurts..
+	bite2: &c&lCONSOLE &7has &cBITTEN &e%arg 1% ! &c&lThat hurts..
+
+#
+#! Unset assets. Will be added in the next update
+#
+
+	slap1: //
+	slap2: //
+
+
+#
+#! Will not affect anything yet !
+#
+
+	cooldown: 10 seconds
+	vip cooldown: 5 seconds
+
+# 
+#! Modify only of you know what you are doing !
+#! 
+#! Spigot: https://www.spigotmc.org/members/imickstyless.461139/
+#! SkUnity: https://forums.skunity.com/members/impdevmc.6348/
+#! Join 'my' srver: play.vapepvp.xyz
+#! Thanks to BaeFell for the advices ❤
+#
+
+#
+#! Enable - Disable Events
+#
+
+on enable:
+	send "[SkFeelings] &a&lEnabled &4&l<3" to console
+
+on disable:
+	send "[SkFeelings] &c&lDisabled &o!" to console
+
+#
+#! Events
+#
+
+variables:
+	{developer.join} = "false"
+	{developer.notification} = "true"
+
+on join:
+	if {developer.join} is "true":
+		if player is "iMPDevMC":
+			broadcast "{@prefix} &c&liMPDevMC &7Joined the server !"
+
+	if {developer.notification} is "true":
+		if player is "iMPDevMC":
+			send "{@lines}"
+			send "{@prefix} &7This sever is using {@skprefix}" to player
+			send "{@lines}"
+#
+#! Skript
+#
+
+#
+#! Main Command
+#
+
+command /feelings [<text>]:
+	permission: {@permission}
+	permission message: {@perm}
+	trigger:
+		if arg 1 is not set:
+			send "{@lines}"
+			send "{@prefix} &7Thank you for using &6&lSk&e&lFeelings"
+			send "{@prefix} &7Made by &c&liMPDevMC"
+			send "{@prefix} &7/feelings <help/config>"
+			send "{@lines}"
+
+		if arg 1 is "help":
+			send "{@preline}"
+			send "&8{@utf3} &c/hug <player>"
+			send "&8{@utf3} &c/kiss <player>"
+			send "&8{@utf3} &c/dab <player>" 
+			send "&8{@utf3} &c/boi <player>"
+			send "&8{@utf3} &c/bite <player>"
+			send "{@lines}"
+
+		if arg 1 is "config":
+			send "{@preline}"
+			send "&8{@utf3} &cCooldown&8: &e{@cooldown}"
+			send "&8{@utf3} &cVIP Cldn&8: &e{@vip cooldown}"
+			send "&8{@utf3} &cPermission&8: &e{@permission}"
+			send "&8{@utf3} &cVIP Perm&8: &e{@vip permission}"
+			send "&8{@utf3} &cStaff Perm&8: &e{@staff permission}"
+			send "&8{@utf3} &cDev Join&8: &e%{developer.join}%"
+			send "&8{@utf3} &cDev Notif&8: &e%{developer.notification}%"
+			send "{@lines}"
+
+		if arg 1 is set:
+			if arg 1 is not "config" or "help":
+				send "{@prefix} &7Unknown subcommand."
+				send "{@prefix} &7Usage&8: &8/&7feelings &8<&a&lhelp&8/&a&lconfig&8>"
+
+#
+#! Commands
+#
+
+command /hug [<offline player>]:
+	permission: {@permission}
+	permission message: {@perm}
+	trigger:
+		set {_used} to difference between {hugs.%player%.lastused} and now
+		if {_used} is less than 10 seconds:
+			send "{@prefix} &7You can use this command again in %difference between a minute and {_used}% &7&o!"
+			stop
+
+		set {_cused} to difference between {hugs.console.lastused} and now
+		if {_cused} is less than 10 seconds:
+			send "{@prefix} &7You can use this command again in %difference between a minute and {_cused}% &7&o!"
+			stop
+
+		if arg 1 is set:
+			if arg 1 is online:
+				if sender is not a player:
+					broadcast "{@broadcast} &c&lCONSOLE &7gave &e%arg 1% &7a warn hug &4&l❤"
+					set {hug.console.lastused} to now
+					stop 
+
+		if arg 1 is not set:
+			send "{@prefix} &c&lYeet! &fYou might want to try &7/hug <player>"
+			stop 
+
+		if arg 1 is set:
+			if arg 1 is online:
+				if arg 1 is not sender:
+					broadcast "{@broadcast} {@hug1}"
+					set {hug.%player%.lastused} to now 
+					stop
+
+		if arg 1 is set:
+			if arg 1 is not online:
+				if sender is a player:
+					send "{@prefix} &c&lOops! &fThat player seems &7offline"
+					stop
+
+		if arg 1 is set:
+			if arg 1 is not online:
+				if sender is not a player:
+					send "{@prefix} &c&lOops! &fThat player seems &7offline"
+					stop 
+
+		if arg 1 is set:
+			if arg 1 is sender:
+				send "{@prefix} &c&lNope! &fYou can't hug yourself"
+
+command /kiss [<offline player>]:
+	permission: {@permission}
+	permission message: {@perm}
+	trigger:
+		set {_used.kiss} to difference between {kiss.%player%.lastused} and now
+		if {_used.kiss} is less than 10 seconds:
+			send "{@prefix} &7You can use this command again in %difference between 10 seconds and {_used.kiss}% &7&o!"
+			stop
+
+		set {_console.used.kiss} to difference between {kiss.console.lastused} and now
+		if {_console.used.kiss} is less than 10 seconds:
+			send "{@prefix} &7You can use this command again in %difference between 10 seconds and {_console.used.kiss}% &7&o!"
+			stop
+
+		if arg 1 is not set:
+			send "{@prefix} &c&lOops! &fMaybe try &7/kiss <player>"
+			stop 
+
+		if arg 1 is set:
+			if arg 1 is online:
+				if sender is a player:
+					if arg 1 is not sender:
+						broadcast "{@broadcast} {@kiss1}"
+						set {kiss.%player%.lastused} to now 
+						stop 
+
+		if arg 1 is set:
+			if arg 1 is not online:
+				send "{@prefix} &c&lOof! &fI didn't found that player &7&o!"
+				stop 
+
+		if arg 1 is set:
+			if arg 1 is online:
+				if sender is not a player:
+					broadcast "{@broadcast} {@kiss2}"
+					set {kiss.console.lastused} to now 
+					stop 
+
+		if arg 1 is set:
+			if arg 1 is sender:
+				send "{@prefix} &c&lNope! &fYou can't kiss yourself"
+
+command /dab [<offline player>]:
+	permission: {@permission}
+	permission message: {@perm}
+	trigger:
+		set {_used.dab} to difference between {dab.%player%.lastused} and now
+		if {_used.dab} is less than 10 seconds:
+			send "{@prefix} &7You can use this command again in %difference between 10 seconds and {_used.dab}% &7&o!"
+			stop
+
+		set {_console.used.dab} to difference between {dab.console.lastused} and now 
+		if {_console.used.dab} is less than 10 seconds:
+			send "{@prefix} &7You can use this command again in %difference between 10 seconds and {_console.used.dab}% &7&o!"
+			stop
+
+		if arg 1 is not set:
+			send "{@prefix} &c&lYikes! &fThat not how it works. Try &7/dab <player>"
+			stop 
+
+		if arg 1 is set:
+			if arg 1 is online:
+				if arg 1 is not sender:
+					if sender is a player:
+						broadcast "{@broadcast} {@dab1}"
+						set {dab.%player%.lastused} to now 
+						stop 
+
+		if arg 1 is set:
+			if arg 1 is online:
+				if arg 1 is not sender:
+					if sender is not a player:
+						broadcast "{@broadcast} {@dab2}"
+						set {dab.console.lastused} to now 
+						stop 
+
+		if arg 1 is set:
+			if arg 1 is not online:
+				send "{@prefix} &c&lMhm &fi didn't find that player. Try it with someone else"
+				stop
+
+		if arg 1 is set:
+			if arg 1 is sender:
+				send "{@prefix} &c&lNope! &fYou can't dab on yourself"
+
+command /bite [<offline player>]:
+	permission: {@permission}
+	permission message: {@perm}
+	trigger:	
+		set {_used.bite} to difference between {bite.%player%.lastused} and now
+		if {_used.bite} is less than 10 seconds:
+			send "{@prefix} &7You can use this command again in %difference between 10 seconds and {_used.bite}% &7&o!"
+			stop
+
+		set {_console.used.bite} to difference between {bite.console.lastused} and now 
+		if {_console.used.bite} is less than 10 seconds:
+			send "{@prefix} &7You can use this command again in %difference between 10 seconds and {_console.used.bite}% &7&o!"
+			stop
+
+		if arg 1 is not set:
+			send "{@prefix} &c&lReally? &fYou need to use that on a player. &7/bite <player>"
+			stop 
+
+		if arg 1 is set:
+			if arg 1 is not online:
+				if sender is a player:
+					send "{@prefix} &c&lWoops! &fThat player seems offline. &7/bite <player>"
+
+		if arg 1 is set:
+			if arg 1 is online:
+				if arg 1 is not sender:
+					if sender is a player:
+						broadcast "{@broadcast} {@bite2}"
+						set {bite.%player%.lastused} to now
+						stop
+
+		if arg 1 is set:
+			if arg 1 is online:
+				if arg 1 is not sender:
+					if sender is not a player:
+						broadcast "{@broadcast} {@bite2}"
+						set {bite.console.lastused} to now 
+
+		if arg 1 is set:
+			if arg 1 is sender:
+				send "{@prefix} &c&lNope! &fYou can't bite yourself"
+
+command /boi [<offline player>]:
+	permission: {@permission}
+	permission message: {@perm}
+	trigger:
+		set {_used.boi} to difference between {boi.%player%.lastused} and now
+		if {_used.bite} is less than 10 seconds:
+			send "{@prefix} &7You can use this command again in %difference between 10 seconds and {_used.boi}% &7&o!"
+			stop
+
+		set {_console.used.boi} to difference between {boi.console.lastused} and now 
+		if {_console.used.boi} is less than 10 seconds:
+			send "{@prefix} &7You can use this command again in %difference between 10 seconds and {_console.used.boi}% &7&o!"
+			stop
+
+		if arg 1 is not set:
+			send "{@prefix} &c&lEureka! &fNo, ya need to select a player for that. &7/boi <player>"
+
+		if arg 1 is set:
+			if arg 1 is online:
+				if arg 1 is not sender:
+					if sender is a player:
+						broadcast "{@broadcast} {@bite1}"
+						set {boi.%player%.lastused} to now
+						stop 
+
+		if arg 1 is set:
+			if arg 1 is online:
+				if arg 1 is not sender:
+					if sender is not a player:
+						broadcast "{@broadcast} {@bite2}"
+						set {boi.console.lastused} to now
+						stop 
+
+		if arg 1 is set:
+			if arg 1 is not online:
+				send "{@prefix} &c&lQwERty? &fThat player is not online ! &7/boi <player>"
+
+		if arg 1 is set:
+			if arg 1 is sender:
+				send "&c&lStoopid! &fSorry but that's not happening. &7/boi <player>"
+
